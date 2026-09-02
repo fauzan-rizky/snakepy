@@ -3,7 +3,6 @@ import sys
 import time
 import copy
 import random
-from readchar import key
 from blessed import Terminal
 
 term_size = os.get_terminal_size()
@@ -61,8 +60,9 @@ def check_meal(head):
     if head == apple_location:
         apple_exists = False
         apple_location = []
-        snake_length += 1
-        path.append([0,0])
+        snake_length += 5
+        for i in range(5):
+            path.append([0,0])
 
 def check_collision(target, checkpath):
     if target in checkpath:
@@ -79,7 +79,6 @@ def render_terminal():
 def draw_border():
     
     global term, term_columns, term_lines
-    print(term.clear())
     bars = ["█" for i in range(term_columns)]
     for i in range(term_lines):
         if i == 0 or i == term_lines - 1:
@@ -91,6 +90,13 @@ def draw_border():
             with term.location(x=term_columns,y=i):
                 print("█", end="")
 
+def clear_snake():
+    global path
+    clear_path = copy.deepcopy(path)
+    for clear in clear_path:
+            with term.location(clear[1], clear[0]):
+                print(" ")
+
 def draw_snake():
     global path
     for entry in path:
@@ -100,6 +106,7 @@ def draw_snake():
 def update():
 
     render_terminal()
+    clear_snake()
     
     past_path = copy.deepcopy(path)
 
@@ -134,6 +141,8 @@ def update():
         else: 
             path[i] = past_path[(i-1)]
 
+    
+
     for i in range(snake_length):
         if i == 0:
             terminal[path[i][0]][path[i][1]] = "#" 
@@ -143,7 +152,7 @@ def update():
     generate_apple()
     terminal[apple_location[0]][apple_location[1]] = "Q"
     
-    draw_border()
+
     draw_snake()
 
     with term.location(apple_location[1],apple_location[0]):
@@ -161,6 +170,8 @@ direction = "right"
 frames = 1
 
 with term.hidden_cursor(), term.cbreak():
+    print(term.clear())
+    draw_border()
     while True:
 
         listen_input()
