@@ -141,8 +141,6 @@ def update():
         else: 
             path[i] = past_path[(i-1)]
 
-    
-
     for i in range(snake_length):
         if i == 0:
             terminal[path[i][0]][path[i][1]] = "#" 
@@ -152,7 +150,6 @@ def update():
     generate_apple()
     terminal[apple_location[0]][apple_location[1]] = "Q"
     
-
     draw_snake()
 
     with term.location(apple_location[1],apple_location[0]):
